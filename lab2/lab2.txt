@@ -1,0 +1,27 @@
+
+Question 1: How do you specify a TCP socket in Python?
+specify address familiy AFNET and
+
+
+Question 2: What is the difference between a client socket and a server socket in Python?
+server need to bind. client has to initiate the connection
+
+Question 3: How do we instruct the OS to let us reuse the same bind port?
+
+setsockopt(   .. reuse = 1)
+
+Question 4: What information do we get about incoming connections?
+
+
+Question 5: What is returned by recv() from the server after it is done sending the HTTP request?
+
+after we done, we just get empty string
+
+
+my tast:
+proxy serbver need 1 socket for communicate between proxyServ and proxy client
+1 socket is to communicate between proxyserver and google serevr
+
+# in proxy server, after you got the connection from proxyclient, you can fork
+
+
