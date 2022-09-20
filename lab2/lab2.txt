@@ -1,21 +1,22 @@
 
 Question 1: How do you specify a TCP socket in Python?
-specify address familiy AFNET and
+-specify address familiy AFNET and socket type SOCKSTREAM
 
 
 Question 2: What is the difference between a client socket and a server socket in Python?
-server need to bind. client has to initiate the connection
+-server need to bind its IP and port number it listens to. 
+-client has to initiate the connection so the server can accept it
 
 Question 3: How do we instruct the OS to let us reuse the same bind port?
 
-setsockopt(   .. reuse = 1)
+-We set SO_REUSEADDR flag to be 1
 
 Question 4: What information do we get about incoming connections?
-
+-We get "Connected by ('127.0.0.1', 65492)" so its IP adress and port number it listen to
 
 Question 5: What is returned by recv() from the server after it is done sending the HTTP request?
-
-after we done, we just get empty string
+-we first get the result of the request with is equivalent to curl -i www.google.com
+-after we done, we just get empty string because no more response from google
 
 
 my tast:
