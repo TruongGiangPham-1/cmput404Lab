@@ -65,7 +65,7 @@ def main():
         send_data(s, payload)
         s.shutdown(socket.SHUT_WR)  # server knows that there is no more to listn to so it can respond back
 
-        #continue accepting data until no more left
+        #continue accepting data until no more left from proxy_Server
         full_data = b""
         while True:
             data = s.recv(buffer_size)

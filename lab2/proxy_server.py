@@ -1,7 +1,8 @@
 
 #!/usr/bin/env python3
-import socket
+import socket, sys
 import time
+from multiprocessing import Process
 
 #define address & buffer size
 HOST = "127.0.0.1"
@@ -30,56 +31,115 @@ def main():
              
             
             # create new process
-            # p = Process(target = echo_handler, args=(conn, addr))
+            p = Process(target = echo_handler, args=(conn, addr))
+            p.start()
+            conn.close()
+            #p.join()
             #p.daemon = true
             #
 
             
             
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s1:
-                hostGoogle = 'www.google.com'
-                port = 80  # for google
-            # one connection is made, create new socket
-            # with socket.socket  ... as s1:
-                 # 
-                 # after sending it to google, we shutdown so c
-                 # we read the data we got back(using while loop)
-                 # then we send what we got back to the proxy client
-            #recieve data, wait a bit, then send it back
+            #with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s1:
+            #    hostGoogle = 'www.google.com'
+            #    port = 80  # for google
+            ## one connection is made, create new socket
+            ## with socket.socket  ... as s1:
+            #     # 
+            #     # after sending it to google, we shutdown so c
+            #     # we read the data we got back(using while loop)
+            #     # then we send what we got back to the proxy client
+            ##recieve data, wait a bit, then send it back
 
-                #s1.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # set 1 -> 0 if there problem
-                # SOL_SOCKET sets level, so reuse only applies to this s1 socket
+            #    #s1.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # set 1 -> 0 if there problem
+            #    # SOL_SOCKET sets level, so reuse only applies to this s1 socket
 
-                remote_ip = get_remote_ip(hostGoogle) # ip of google.com
+            #    remote_ip = get_remote_ip(hostGoogle) # ip of google.com
 
-                s1.connect((hostGoogle , port))  # connect to google
-                print (f'Socket Connected to {hostGoogle} on ip {remote_ip}')
+            #    s1.connect((hostGoogle , port))  # connect to google
+            #    print (f'Socket Connected to {hostGoogle} on ip {remote_ip}')
 
-                full_data = conn.recv(BUFFER_SIZE)  # read from proxyClient
-                print("got from proxyclient", full_data)
-                time.sleep(0.5)
-
-
-
-                # now relay data to google
-                #send the data and shutdown
-                print("full_data is, ", full_data.decode("utf-8"))
-                send_data(s1, full_data.decode("utf-8") )  # turn byte to string, b'' to ''
-                s1.shutdown(socket.SHUT_WR)  # google knows that there is no more to listn to so it can respond back
+            #    full_data = conn.recv(BUFFER_SIZE)  # read from proxyClient
+            #    print("got from proxyclient", full_data)
+            #    time.sleep(0.5)
 
 
-                # now get data from google to google
-                full_data = b""
-                while True:
-                    data = s1.recv(buffer_size)
-                    if not data:
-                        break
-                    full_data += data
-                print(full_data)
-                # 
 
-                conn.sendall(full_data)
-                conn.close()
+            #    # now relay data to google
+            #    #send the data and shutdown
+            #    print("full_data is, ", full_data.decode("utf-8"))
+            #    send_data(s1, full_data.decode("utf-8") )  # turn byte to string, b'' to ''
+            #    s1.shutdown(socket.SHUT_WR)  # google knows that there is no more to listn to so it can respond back
+
+
+            #    # now get data from google to google
+            #    full_data = b""
+            #    while True:
+            #        data = s1.recv(buffer_size)
+            #        if not data:
+            #            break
+            #        full_data += data
+            #    print(full_data)
+            #    # 
+
+            #    conn.sendall(full_data)  # send that data back to the proxy_client
+            #conn.close()
+
+
+"""
+after fork this it will run this cell
+
+in proxy server, it will 
+"""
+def echo_handler(conn, addr):
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s1:
+        hostGoogle = 'www.google.com'
+        port = 80  # for google
+        buffer_size = 4096
+    # one connection is made, create new socket
+    # with socket.socket  ... as s1:
+            # 
+            # after sending it to google, we shutdown so c
+            # we read the data we got back(using while loop)
+            # then we send what we got back to the proxy client
+    #recieve data, wait a bit, then send it back
+
+        #s1.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # set 1 -> 0 if there problem
+        # SOL_SOCKET sets level, so reuse only applies to this s1 socket
+
+        remote_ip = get_remote_ip(hostGoogle) # ip of google.com
+
+        s1.connect((hostGoogle , port))  # connect to google
+        print (f'Socket Connected to {hostGoogle} on ip {remote_ip}')
+
+        full_data = conn.recv(BUFFER_SIZE)  # read from proxyClient
+        print("got from proxyclient", full_data)
+        time.sleep(0.5)
+
+
+
+        # now relay data to google
+        #send the data and shutdown
+        print("full_data is, ", full_data.decode("utf-8"))
+        send_data(s1, full_data.decode("utf-8") )  # turn byte to string, b'' to ''
+        s1.shutdown(socket.SHUT_WR)  # google knows that there is no more to listn to so it can respond back
+
+
+        # now get data from google to google
+        full_data = b""
+        while True:
+            data = s1.recv(buffer_size)
+            if not data:
+                break
+            full_data += data
+        #print(full_data)
+        # 
+
+        conn.sendall(full_data)  # send that data back to the proxy_client
+        print("before close")
+        conn.close()
+        print("after close")
+
 
 
 # demo of what to do in echo server with fork
@@ -115,12 +175,6 @@ def send_data(serversocket, payload):
         print ('Send failed')
         sys.exit()
     print("Payload sent successfully")
-
-def echo_handler(conn, addr):
-    full_data = conn.recv(BUFFER_SIZE)
-    time.sleep(0.5)
-    conn.sendall(full_data)
-    conn.close()   
 
 if __name__ == "__main__":
     main()
