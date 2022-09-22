@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import socket
 import time
-
+from multiprocessing import Process
 #define address & buffer size
 HOST = ""
 PORT = 8001
@@ -29,7 +29,9 @@ def main():
             # p = Process(target = echo_handler, args=(conn, addr))
             #p.daemon = true
             #
-
+            p = Process(target = echo_handler, args=(conn, addr))
+            p.start()
+            conn.close()
             # one connection is made, create new socket
             # with socket.socket  ... as s1:
                  # 
@@ -37,10 +39,10 @@ def main():
                  # we read the data we got back(using while loop)
                  # then we send what we got back to the proxy client
             #recieve data, wait a bit, then send it back
-            full_data = conn.recv(BUFFER_SIZE)
-            time.sleep(0.5)
-            conn.sendall(full_data)
-            conn.close()
+            #full_data = conn.recv(BUFFER_SIZE)
+            #time.sleep(0.5)
+            #conn.sendall(full_data)
+            #conn.close()
 
 
 # demo of what to do in echo server with fork
