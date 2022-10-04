@@ -1,0 +1,20 @@
+Q2: After starting a brand new Django application and running the runserver command, what does the browser show you?
+ the browser showed me "The install worked successfully! Congratulations!" screen
+
+Q3: After creating the first view within polls, what does the browser show you when navigating to / and to /polls respectively?
+ A: in /polls i see the message "Hello, world. You're at the polls index."
+    in /, i see page not found(404) error
+
+Q4: 
+1.add 'polls.apps.PollsConfig'
+2. do database migration 
+-'python manage.py makemigrations polls' (this creates the tables we have defined in models.py)
+-'python manage.py migrate' (this will apply the change)
+
+migrate command will look at lines in INSTALLED_APP to create any new tables.
+We need migration because this is how we update the model. In MVC architechture, 
+whenever model changes, it calls .update() on all of the views that are associated with the model
+
+
+Q5: What do you see after you log into the Django adminstration site? From a high levle, how do you get custom models to appear in the Django admin page
+-----------------------------
