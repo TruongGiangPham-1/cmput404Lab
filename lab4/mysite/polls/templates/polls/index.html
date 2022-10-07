@@ -3,6 +3,7 @@
     {% for question in latest_question_list %}  <!-- view will render this file and give question list []-->
         <!--<li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li> <!-- create list of questions, hyperlink to /polls/Qid-->
         <!-- new (no more hardcode url)-->
+        <!-- 'detail' is a tag of the path defined in urls.py-->
         <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
 
     {% endfor %}
